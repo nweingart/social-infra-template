@@ -1,24 +1,34 @@
 import React, { useState } from 'react';
-import { Button, TextInput, Text, View, Alert, TouchableOpacity, StyleSheet } from 'react-native';
-import { auth } from '../../../firebase/Firebase'
+import { TextInput, Text, View, Alert, TouchableOpacity, StyleSheet } from 'react-native';
+import { auth } from '../../../firebase/Firebase';
+import { useNavigation } from '@react-navigation/native';
 
 const Register = () => {
   const [phone, setPhone] = useState('');
   const [confirm, setConfirm] = useState(null);
   const [code, setCode] = useState('');
 
+  const navigation = useNavigation();
+
+  const navigateToContactsScreen = () => {
+    navigation.navigate('Contacts');
+  }
+
   const signInWithPhoneNumber = async (phoneNumber) => {
-    const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+    const confirmation = await auth.signInWithPhoneNumber(phoneNumber);
     setConfirm(confirmation);
   }
 
   const confirmCode = async () => {
     try {
       await confirm.confirm(code);
+      navigateToContactsScreen(); // Navigate to the Contacts screen after successful registration
     } catch (error) {
       Alert.alert('Invalid code.');
     }
   }
+
+
 
   if (!confirm) {
     return (
@@ -77,4 +87,3 @@ const styles = StyleSheet.create({
 });
 
 export default Register;
-
